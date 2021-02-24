@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using KeysHandler;
 
 namespace Snake
 {
@@ -20,7 +21,7 @@ namespace Snake
         };
 
         public GameMenu()
-        { 
+        {
 
         }
 
@@ -39,10 +40,10 @@ namespace Snake
             GameCore.DrawPixel(LeftIndentMenu + 5, TopIndentMenu + 2, PickMenu);
             _menuState = GameMenuEnum.StartGameSnake;
 
-            GameKeysHandler.PressButtonEsc += MenuSelectExit;
-            GameKeysHandler.PressButtonEnter += MenuSelect;
-            GameKeysHandler.PressButtonUp += ChangeMenuPositionUp;
-            GameKeysHandler.PressButtonDown += ChangeMenuPositionDown;
+            GameCore.KeysEventsHandler.PressButtonEsc += MenuSelectExit;
+            GameCore.KeysEventsHandler.PressButtonEnter += MenuSelect;
+            GameCore.KeysEventsHandler.PressButtonUp += ChangeMenuPositionUp;
+            GameCore.KeysEventsHandler.PressButtonDown += ChangeMenuPositionDown;
         }
 
         private void ChangeMenuPositionUp()
@@ -106,38 +107,35 @@ namespace Snake
         {
             Console.Clear();
             GameCore.DrawPicture(0, 0, GameCore.GenerateFrame(10, 20));
-            GameKeysHandler.PressButtonEsc -= MenuSelectExit;
-            GameKeysHandler.PressButtonEnter -= MenuSelect;
-            GameKeysHandler.PressButtonUp -= ChangeMenuPositionUp;
-            GameKeysHandler.PressButtonDown -= ChangeMenuPositionDown;
+            GameCore.KeysEventsHandler.PressButtonEsc -= MenuSelectExit;
+            GameCore.KeysEventsHandler.PressButtonEnter -= MenuSelect;
+            GameCore.KeysEventsHandler.PressButtonUp -= ChangeMenuPositionUp;
+            GameCore.KeysEventsHandler.PressButtonDown -= ChangeMenuPositionDown;
         }
 
-        private void MenuSelectExit()
+        private static void MenuSelectExit()
         {
-            Console.Clear();
-            GameCore.DrawPicture(0, 0, GameCore.GenerateFrameWithText(new []{"GOOD", "LUCK!"}));
-            Console.SetCursorPosition(0, 10);
-            GameKeysHandler.Close();
+            GameCore.Close();
         }
-    }
 
-    public class GameMenuObj
-    {
-        public string Name { get; set; }
-        public GameMenuEnum MenuE { get; set; }
-    }
+        private enum GameMenuEnum
+        {
+            StartGameSnake,
+            //One,
+            //Two,
+            //Three,
+            Exit
+        }
+        private class GameMenuObj
+        {
+            public string Name { get; set; }
+            public GameMenuEnum MenuE { get; set; }
 
-    public enum GameMenuEnum
-    {
-        StartGameSnake,
-        //One,
-        //Two,
-        //Three,
-        Exit
-    }
-    public enum GameState
-    {
-        Menu,
-        GameSnake
+        }
+        private enum GameState
+        {
+            Menu,
+            GameSnake
+        }
     }
 }

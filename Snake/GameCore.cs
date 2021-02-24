@@ -1,35 +1,41 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
+using KeysHandler;
 
 namespace Snake
 {
     public static class GameCore
     {
         public static GameMenu GameMenu;
+        public static KeysEventsHandler KeysEventsHandler;
         public static void Initialization(byte left, byte top)
         {
             Console.Title = "Game";
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
+            Console.CursorVisible = false;
             Console.SetWindowSize(left * 2, top + 10);
-
+            KeysEventsHandler = new KeysEventsHandler();
             GameMenu = new GameMenu();
             GameMenu.Initialization();
+        }
+
+        public static void Close()
+        {
+            KeysEventsHandler.Dispose();
+            GameMenu = null;
         }
 
         public static void DrawPixel(byte x, byte y, char pixel)
         {
             Console.SetCursorPosition(x, y);
             Console.Write(pixel);
-            Console.SetCursorPosition(0, 0);
         }
 
         public static void DrawString(byte startX, byte startY, string text)
         {
             Console.SetCursorPosition(startX, startY);
             Console.Write(text);
-            Console.SetCursorPosition(0, 0);
         }
 
         public static void DrawPicture(byte x, byte y, char[][] picture)
@@ -44,7 +50,6 @@ namespace Snake
                     Console.Write(item);
                 }
             }
-            Console.SetCursorPosition(0, 0);
         }
 
         public static void DrawPicture(byte x, byte y, string[] picture)
@@ -87,7 +92,7 @@ namespace Snake
             for (int i = 0; i < text.Length; i++)
             {
                 string item = text[i];
-                
+
             }
 
             return frame;

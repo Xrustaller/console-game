@@ -13,4 +13,8 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\KeysHandler\KeysHandler.csproj" />
+  </ItemGroup>
+
 </Project>

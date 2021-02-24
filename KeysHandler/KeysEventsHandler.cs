@@ -1,42 +1,44 @@
 ﻿using System;
 using System.Threading;
 
-namespace Snake
+namespace KeysHandler
 {
-    public static class GameKeysHandler
+    public sealed class KeysEventsHandler : IDisposable
     {
-        private static bool _exit = false;
+        private bool _exit = false;
 
-        private static Thread _keyRead;
+        private readonly Thread _keyRead;
+        private bool _disposedValue;
 
         private delegate void KeyEvents(ConsoleKey key);
-        private static event KeyEvents KeysHandler;
+        private event KeyEvents PressedKey;
 
-        public static event Action PressButtonUp;
-        public static event Action PressButtonDown;
-        public static event Action PressButtonLeft;
-        public static event Action PressButtonRight;
-        public static event Action PressButtonQ;
-        public static event Action PressButtonEsc;
-        public static event Action PressButtonEnter;
+        public event Action PressButtonUp;
+        public event Action PressButtonDown;
+        public event Action PressButtonLeft;
+        public event Action PressButtonRight;
+        public event Action PressButtonQ;
+        public event Action PressButtonEsc;
+        public event Action PressButtonEnter;
 
-        static GameKeysHandler()
+        public KeysEventsHandler()
         {
-            KeysHandler += PressKey;
+            PressedKey += PressKey;
             _keyRead = new Thread(WaitKey);
             _keyRead.Start();
         }
 
-        public static void WaitKey()
+        private void WaitKey()
         {
+            Dispose(false);
             while (!_exit)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
-                KeysHandler?.Invoke(key.Key);
+                PressedKey?.Invoke(key.Key);
             }
         }
 
-        public static void PressKey(ConsoleKey key)
+        private void PressKey(ConsoleKey key)
         {
             switch (key)
             {
@@ -84,9 +86,25 @@ namespace Snake
             }
         }
 
-        public static void Close()
+        private void Dispose(bool disposing)
         {
-            _exit = true;
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _exit = true;
+                }
+
+                // TODO: освободить неуправляемые ресурсы (неуправляемые объекты) и переопределить метод завершения
+                // TODO: установить значение NULL для больших полей
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

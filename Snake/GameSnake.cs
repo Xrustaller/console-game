@@ -49,9 +49,10 @@ namespace Snake
                     _snake.Draw();
                 }
             });
-            var frame = GameCore.GenerateFrame((byte)(Height - 1), (byte)(Width - 3), false);
-            GameCore.DrawPicture(0, 0, frame);
+            var frame = GameCore.GenerateFrame((byte)(Height - 1), (byte)(Width - 2), '█');
+            GameCore.DrawPicture(0, 0, frame, ConsoleColor.DarkCyan);
             _timer.Start();
+            GenerateApple();
         }
 
         public void Initialization(bool wall = true, bool randomWall = false)
@@ -72,15 +73,14 @@ namespace Snake
 
         private void GenerateApple()
         {
-            
+            const char apple1 = '⌚';
+            const char apple2 = '⏵';
+            GameCore.DrawPixel((byte)(Width + 2), 2, '█', ConsoleColor.DarkRed);
+            GameCore.DrawPixel((byte)(Width + 3), 2, '█', ConsoleColor.DarkRed);
         }
     }
 
-    public class Coordinate
-    {
-        public byte Y { get; set; }
-        public byte X { get; set; }
-    }
+    
 
     public class Snake
     {
@@ -98,7 +98,7 @@ namespace Snake
         private readonly byte _yMax;
         public Snake(byte xMax, byte yMax, Random rand, byte part = 3)
         {
-            _xMax = xMax;
+            _xMax = (byte) (xMax / 2);
             _yMax = yMax;
             _addSnakePart = 5;
 
@@ -173,7 +173,7 @@ namespace Snake
         public void Move()
         {
             // [0][1][2][3][4][5][6]
-            GameCore.DrawString((byte) (_xMax + 2), 1, $"X: {SnakePartCoordinates[0].X} Y: {SnakePartCoordinates[0].Y}     ");
+            GameCore.DrawString((byte) (_xMax * 2 + 2), 1, $"X: {SnakePartCoordinates[0].X} Y: {SnakePartCoordinates[0].Y}     ");
             Coordinate[] result = _addSnakePart == 0 ? new Coordinate[SnakePartCoordinates.Length] : new Coordinate[SnakePartCoordinates.Length + 1];
             
             switch (_side)
@@ -182,7 +182,7 @@ namespace Snake
                     if (SnakePartCoordinates[0].Y == 1)
                     {
                         // TODO: СМЕЕЕЕЕЕЕРТ
-                        GameCore.DrawString((byte)(_xMax + 2), 1, "DIE UP     ");
+                        GameCore.DrawString((byte)(_xMax * 2 + 2), 1, "DIE UP     ");
                         return;
                     }
                     result[0] = new Coordinate() { X = SnakePartCoordinates[0].X, Y = (byte) (SnakePartCoordinates[0].Y - 1)};
@@ -191,7 +191,7 @@ namespace Snake
                     if (SnakePartCoordinates[0].Y == _yMax - 1)
                     {
                         // TODO: СМЕЕЕЕЕЕЕРТ
-                        GameCore.DrawString((byte)(_xMax + 2), 1, "DIE DOWN   ");
+                        GameCore.DrawString((byte)(_xMax * 2 + 2), 1, "DIE DOWN   ");
                         return;
                     }
                     result[0] = new Coordinate() { X = SnakePartCoordinates[0].X, Y = (byte) (SnakePartCoordinates[0].Y + 1)};
@@ -200,7 +200,7 @@ namespace Snake
                     if (SnakePartCoordinates[0].X == 1)
                     {
                         // TODO: СМЕЕЕЕЕЕЕРТ
-                        GameCore.DrawString((byte)(_xMax + 2), 1, "DIE LEFT   ");
+                        GameCore.DrawString((byte)(_xMax * 2 + 2), 1, "DIE LEFT   ");
                         return;
                     }
                     result[0] = new Coordinate() { X = (byte) (SnakePartCoordinates[0].X - 1), Y = SnakePartCoordinates[0].Y };
@@ -209,7 +209,7 @@ namespace Snake
                     if (SnakePartCoordinates[0].X == _xMax - 1)
                     {
                         // TODO: СМЕЕЕЕЕЕЕРТ
-                        GameCore.DrawString((byte)(_xMax + 2), 1, "DIE RIGHT  ");
+                        GameCore.DrawString((byte)(_xMax * 2 + 2), 1, "DIE RIGHT  ");
                         return;
                     }
                     result[0] = new Coordinate() { X = (byte) (SnakePartCoordinates[0].X + 1), Y = SnakePartCoordinates[0].Y };
@@ -239,16 +239,20 @@ namespace Snake
 
         public void Draw()
         {
-            GameCore.DrawPixel(LastCord.X, LastCord.Y, ' ');
+            GameCore.DrawPixel((byte)(LastCord.X * 2), LastCord.Y, ' ', ConsoleColor.DarkGreen);
+            GameCore.DrawPixel((byte)(LastCord.X * 2 + 1), LastCord.Y, ' ', ConsoleColor.DarkGreen);
             Coordinate part = SnakePartCoordinates[0];
-            GameCore.DrawPixel(part.X, part.Y, '█');
+            GameCore.DrawPixel((byte)(part.X * 2), part.Y, '█', ConsoleColor.DarkGreen);
+            GameCore.DrawPixel((byte) (part.X * 2 + 1), part.Y, '█', ConsoleColor.DarkGreen);
             for (int i = 1; i < SnakePartCoordinates.Length - 1; i++)
             {
                 part = SnakePartCoordinates[i];
-                GameCore.DrawPixel(part.X, part.Y, '█');
+                GameCore.DrawPixel((byte)(part.X * 2), part.Y, '█', ConsoleColor.DarkGreen);
+                GameCore.DrawPixel((byte)(part.X * 2 + 1), part.Y, '█', ConsoleColor.DarkGreen);
             }
             part = SnakePartCoordinates[^1];
-            GameCore.DrawPixel(part.X, part.Y, '█');
+            GameCore.DrawPixel((byte)(part.X * 2), part.Y, '█', ConsoleColor.DarkGreen);
+            GameCore.DrawPixel((byte)(part.X * 2 + 1), part.Y, '█', ConsoleColor.DarkGreen);
         }
 
         private enum Side

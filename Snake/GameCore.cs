@@ -26,20 +26,25 @@ namespace Snake
             GameMenu = null;
         }
 
-        public static void DrawPixel(byte x, byte y, char pixel)
+        public static void DrawPixel(byte x, byte y, char pixel, ConsoleColor color = ConsoleColor.White)
         {
+            Console.ForegroundColor = color;
             Console.SetCursorPosition(x, y);
             Console.Write(pixel);
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void DrawString(byte startX, byte startY, string text)
+        public static void DrawString(byte startX, byte startY, string text, ConsoleColor color = ConsoleColor.White)
         {
+            Console.ForegroundColor = color;
             Console.SetCursorPosition(startX, startY);
             Console.Write(text);
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void DrawPicture(byte x, byte y, char[][] picture)
+        public static void DrawPicture(byte x, byte y, char[][] picture, ConsoleColor color = ConsoleColor.White)
         {
+            Console.ForegroundColor = color;
             Console.SetCursorPosition(x, y);
             for (byte index = 0; index < picture.Length; index++)
             {
@@ -50,14 +55,15 @@ namespace Snake
                     Console.Write(item);
                 }
             }
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void DrawPicture(byte x, byte y, string[] picture)
+        public static void DrawPicture(byte x, byte y, string[] picture, ConsoleColor color = ConsoleColor.White)
         {
-            DrawPicture(x, y, picture.Select(i => i.ToCharArray()).ToArray());
+            DrawPicture(x, y, picture.Select(i => i.ToCharArray()).ToArray(), color);
         }
 
-        public static string[] GenerateFrame(byte voidNumY, byte voidNumX, bool doubleX = true, byte thickness = 1)
+        public static string[] GenerateFrame(byte voidNumY, byte voidNumX, char sim = 'X', bool doubleX = true, byte thickness = 1)
         {
             voidNumX += (byte)(thickness * 4);
             voidNumY += (byte)(thickness * 2);
@@ -75,7 +81,7 @@ namespace Snake
                     {
                         if (xI <= thickness || yI <= thickness - 1 || xI >= voidNumX - 2 || yI == voidNumY - 1)
                         {
-                            massY[xI] = 'X';
+                            massY[xI] = sim;
                         }
                         else
                         {
@@ -86,7 +92,7 @@ namespace Snake
                     {
                         if (xI <= thickness - 1 || yI <= thickness - 1 || xI >= voidNumX - 1 || yI == voidNumY - 1)
                         {
-                            massY[xI] = 'X';
+                            massY[xI] = sim;
                         }
                         else
                         {
@@ -100,10 +106,10 @@ namespace Snake
             return mass.ToArray();
         }
 
-        public static string[] GenerateFrameWithText(string[] text, byte leftRight = 4, byte topDown = 2, bool doubleX = true, byte thickness = 1)
+        public static string[] GenerateFrameWithText(string[] text, byte leftRight = 4, byte topDown = 2, char sim = 'X', bool doubleX = true, byte thickness = 1)
         {
             int wordNumMax = text.Select(item => item.Length).Prepend(0).Max();
-            string[] frame = GenerateFrame((byte)(text.Length + topDown * 2), (byte)(wordNumMax + leftRight * 2), doubleX, thickness);
+            string[] frame = GenerateFrame((byte)(text.Length + topDown * 2), (byte)(wordNumMax + leftRight * 2), sim, doubleX, thickness);
             for (int i = 0; i < text.Length; i++)
             {
                 string item = text[i];
@@ -112,6 +118,11 @@ namespace Snake
 
             return frame;
         }
+    }
+    public class Coordinate
+    {
+        public byte Y { get; set; }
+        public byte X { get; set; }
     }
 
 }

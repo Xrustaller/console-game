@@ -31,7 +31,7 @@ namespace Snake
             Console.Clear();
 
             int wordNumMax = _menuMass.Select(item => item.Name.Length).Prepend(0).Max();
-            GameCore.DrawPicture( LeftIndentMenu, TopIndentMenu, GameCore.GenerateFrame((byte)(2 + _menuMass.Length), (byte)(8 + wordNumMax)));
+            GameCore.DrawPicture( LeftIndentMenu, TopIndentMenu, GameCore.GenerateFrame((byte)(2 + _menuMass.Length), (byte)(8 + wordNumMax), '█'), ConsoleColor.DarkRed);
             for (byte index = 0; index < _menuMass.Length; index++)
             {
                 string item = _menuMass[index].Name;

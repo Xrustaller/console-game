@@ -57,7 +57,7 @@ namespace Snake
             DrawPicture(x, y, picture.Select(i => i.ToCharArray()).ToArray());
         }
 
-        public static string[] GenerateFrame(byte voidNumY, byte voidNumX, byte thickness = 1)
+        public static string[] GenerateFrame(byte voidNumY, byte voidNumX, bool doubleX = true, byte thickness = 1)
         {
             voidNumX += (byte)(thickness * 4);
             voidNumY += (byte)(thickness * 2);
@@ -71,24 +71,39 @@ namespace Snake
                 char[] massY = new char[voidNumX];
                 for (int xI = 0; xI < voidNumX; xI++)
                 {
-                    if (xI <= thickness || yI <= thickness - 1 || xI >= voidNumX - 2 || yI == voidNumY - 1)
+                    if (doubleX)
                     {
-                        massY[xI] = 'X';
+                        if (xI <= thickness || yI <= thickness - 1 || xI >= voidNumX - 2 || yI == voidNumY - 1)
+                        {
+                            massY[xI] = 'X';
+                        }
+                        else
+                        {
+                            massY[xI] = ' ';
+                        }
                     }
                     else
                     {
-                        massY[xI] = ' ';
+                        if (xI <= thickness - 1 || yI <= thickness - 1 || xI >= voidNumX - 1 || yI == voidNumY - 1)
+                        {
+                            massY[xI] = 'X';
+                        }
+                        else
+                        {
+                            massY[xI] = ' ';
+                        }
                     }
+                    
                 }
                 mass[yI] = new string(massY);
             }
             return mass.ToArray();
         }
 
-        public static string[] GenerateFrameWithText(string[] text, byte leftRight = 4, byte topDown = 2, byte thickness = 1)
+        public static string[] GenerateFrameWithText(string[] text, byte leftRight = 4, byte topDown = 2, bool doubleX = true, byte thickness = 1)
         {
             int wordNumMax = text.Select(item => item.Length).Prepend(0).Max();
-            string[] frame = GenerateFrame((byte)(text.Length + topDown * 2), (byte)(wordNumMax + leftRight * 2), thickness);
+            string[] frame = GenerateFrame((byte)(text.Length + topDown * 2), (byte)(wordNumMax + leftRight * 2), doubleX, thickness);
             for (int i = 0; i < text.Length; i++)
             {
                 string item = text[i];

@@ -106,11 +106,12 @@ namespace Snake
         private void MenuSelectStartGame()
         {
             Console.Clear();
-            GameCore.DrawPicture(0, 0, GameCore.GenerateFrame(10, 20));
             GameCore.KeysEventsHandler.PressButtonEsc -= MenuSelectExit;
             GameCore.KeysEventsHandler.PressButtonEnter -= MenuSelect;
             GameCore.KeysEventsHandler.PressButtonUp -= ChangeMenuPositionUp;
-            GameCore.KeysEventsHandler.PressButtonDown -= ChangeMenuPositionDown;
+            GameCore.KeysEventsHandler.PressButtonDown -= ChangeMenuPositionDown; 
+            //private const int X = 60;//private const int Y = 30;
+            GameSnake game = new GameSnake(30, 60);
         }
 
         private static void MenuSelectExit()

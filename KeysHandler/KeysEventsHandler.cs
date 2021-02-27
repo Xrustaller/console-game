@@ -13,11 +13,18 @@ namespace KeysHandler
         private delegate void KeyEvents(ConsoleKey key);
         private event KeyEvents PressedKey;
 
+        public event Action PressButtonW;
+        public event Action PressButtonS;
+        public event Action PressButtonA;
+        public event Action PressButtonD;
+        public event Action PressButtonQ;
+
         public event Action PressButtonUp;
         public event Action PressButtonDown;
         public event Action PressButtonLeft;
         public event Action PressButtonRight;
-        public event Action PressButtonQ;
+        public event Action PressButtonNum0;
+
         public event Action PressButtonEsc;
         public event Action PressButtonEnter;
 
@@ -43,24 +50,40 @@ namespace KeysHandler
             switch (key)
             {
                 case ConsoleKey.W:
+                    {
+                        PressButtonW?.Invoke();
+                        break;
+                    }
                 case ConsoleKey.UpArrow:
                     {
                         PressButtonUp?.Invoke();
                         break;
                     }
                 case ConsoleKey.S:
+                    {
+                        PressButtonS?.Invoke();
+                        break;
+                    }
                 case ConsoleKey.DownArrow:
                     {
                         PressButtonDown?.Invoke();
                         break;
                     }
                 case ConsoleKey.A:
+                    {
+                        PressButtonA?.Invoke();
+                        break;
+                    }
                 case ConsoleKey.LeftArrow:
                     {
                         PressButtonLeft?.Invoke();
                         break;
                     }
                 case ConsoleKey.D:
+                    {
+                        PressButtonD?.Invoke();
+                        break;
+                    }
                 case ConsoleKey.RightArrow:
                     {
                         PressButtonRight?.Invoke();
@@ -76,6 +99,11 @@ namespace KeysHandler
                 case ConsoleKey.Q:
                     {
                         PressButtonQ?.Invoke();
+                        break;
+                    }
+                case ConsoleKey.NumPad0:
+                    {
+                        PressButtonNum0?.Invoke();
                         break;
                     }
                 case ConsoleKey.Escape:

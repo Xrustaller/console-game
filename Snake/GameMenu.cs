@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using KeysHandler;
 
 namespace Snake
 {
@@ -31,7 +30,7 @@ namespace Snake
             Console.Clear();
 
             int wordNumMax = _menuMass.Select(item => item.Name.Length).Prepend(0).Max();
-            GameCore.DrawPicture( LeftIndentMenu, TopIndentMenu, GameCore.GenerateFrame((byte)(2 + _menuMass.Length), (byte)(8 + wordNumMax), '█'), ConsoleColor.DarkRed);
+            GameCore.DrawPicture(LeftIndentMenu, TopIndentMenu, GameCore.GenerateFrame((byte)(2 + _menuMass.Length), (byte)(8 + wordNumMax), '█'), ConsoleColor.DarkRed);
             for (byte index = 0; index < _menuMass.Length; index++)
             {
                 string item = _menuMass[index].Name;
@@ -42,15 +41,15 @@ namespace Snake
 
             GameCore.KeysEventsHandler.PressButtonEsc += MenuSelectExit;
             GameCore.KeysEventsHandler.PressButtonEnter += MenuSelect;
-            GameCore.KeysEventsHandler.PressButtonUp += ChangeMenuPositionUp;
-            GameCore.KeysEventsHandler.PressButtonDown += ChangeMenuPositionDown;
+            GameCore.KeysEventsHandler.PressButtonW += ChangeMenuPositionW;
+            GameCore.KeysEventsHandler.PressButtonS += ChangeMenuPositionS;
         }
 
-        private void ChangeMenuPositionUp()
+        private void ChangeMenuPositionW()
         {
             sbyte pos = -1;
             sbyte i = (sbyte)_menuState;
-            GameCore.DrawPixel(LeftIndentMenu + 5, (byte)(_menuState + TopIndentMenu + 2), ' ');
+            GameCore.DrawPixel(LeftIndentMenu + 5, (byte)_menuState + TopIndentMenu + 2, ' ');
             if (i + pos > _menuMass.Length - 1)
             {
                 _menuState = 0;
@@ -63,14 +62,14 @@ namespace Snake
             {
                 _menuState += pos;
             }
-            GameCore.DrawPixel(LeftIndentMenu + 5, (byte)(_menuState + TopIndentMenu + 2), PickMenu);
+            GameCore.DrawPixel(LeftIndentMenu + 5, (byte)_menuState + TopIndentMenu + 2, PickMenu);
         }
 
-        private void ChangeMenuPositionDown()
+        private void ChangeMenuPositionS()
         {
             sbyte pos = 1;
             sbyte i = (sbyte)_menuState;
-            GameCore.DrawPixel(LeftIndentMenu + 5, (byte)(_menuState + TopIndentMenu + 2), ' ');
+            GameCore.DrawPixel(LeftIndentMenu + 5, (byte)_menuState + TopIndentMenu + 2, ' ');
             if (i + pos > _menuMass.Length - 1)
             {
                 _menuState = 0;
@@ -83,7 +82,7 @@ namespace Snake
             {
                 _menuState += pos;
             }
-            GameCore.DrawPixel(LeftIndentMenu + 5, (byte)(_menuState + TopIndentMenu + 2), PickMenu);
+            GameCore.DrawPixel(LeftIndentMenu + 5, (byte)_menuState + TopIndentMenu + 2, PickMenu);
         }
 
         private void MenuSelect()
@@ -91,15 +90,15 @@ namespace Snake
             switch (_menuState)
             {
                 case GameMenuEnum.StartGameSnake:
-                {
-                    MenuSelectStartGame();
-                    break;
-                }
+                    {
+                        MenuSelectStartGame();
+                        break;
+                    }
                 case GameMenuEnum.Exit:
-                {
-                    MenuSelectExit();
-                    break;
-                }
+                    {
+                        MenuSelectExit();
+                        break;
+                    }
             }
         }
 
@@ -108,10 +107,11 @@ namespace Snake
             Console.Clear();
             GameCore.KeysEventsHandler.PressButtonEsc -= MenuSelectExit;
             GameCore.KeysEventsHandler.PressButtonEnter -= MenuSelect;
-            GameCore.KeysEventsHandler.PressButtonUp -= ChangeMenuPositionUp;
-            GameCore.KeysEventsHandler.PressButtonDown -= ChangeMenuPositionDown; 
+            GameCore.KeysEventsHandler.PressButtonW -= ChangeMenuPositionW;
+            GameCore.KeysEventsHandler.PressButtonS -= ChangeMenuPositionS;
             //private const int X = 60;//private const int Y = 30;
             GameSnake game = new GameSnake(30, 60);
+            game.InitializationSinglePlayer();
         }
 
         private static void MenuSelectExit()

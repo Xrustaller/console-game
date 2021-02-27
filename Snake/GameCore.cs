@@ -1,6 +1,7 @@
-﻿using System;
+﻿using KeysHandler;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using KeysHandler;
 
 namespace Snake
 {
@@ -14,7 +15,7 @@ namespace Snake
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
             Console.CursorVisible = false;
-            Console.SetWindowSize(left * 2, top + 10);
+            Console.SetWindowSize(left * 2 - 10, top + 1);
             KeysEventsHandler = new KeysEventsHandler();
             GameMenu = new GameMenu();
             GameMenu.Initialization();
@@ -32,6 +33,22 @@ namespace Snake
             Console.SetCursorPosition(x, y);
             Console.Write(pixel);
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void DrawPixel(int x, int y, char pixel, ConsoleColor color = ConsoleColor.White)
+        {
+            DrawPixel((byte)x, (byte)y, pixel, color);
+        }
+
+        public static void DrawDoublePixel(byte x, byte y, char pixel, ConsoleColor color = ConsoleColor.White)
+        {
+            DrawPixel(x, y, pixel, color);
+            DrawPixel((byte) (x + 1), y, pixel, color);
+        }
+
+        public static void DrawDoublePixel(int x, int y, char pixel, ConsoleColor color = ConsoleColor.White)
+        {
+            DrawDoublePixel((byte)x, (byte)y, pixel, color);
         }
 
         public static void DrawString(byte startX, byte startY, string text, ConsoleColor color = ConsoleColor.White)
@@ -56,6 +73,14 @@ namespace Snake
                 }
             }
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public static void DrawCoords(IEnumerable<Coordinate> cords, char partS, ConsoleColor color = ConsoleColor.White)
+        {
+            foreach (Coordinate t in cords)
+            {
+                DrawDoublePixel(t.X * 2, t.Y, partS, color);
+            }
         }
 
         public static void DrawPicture(byte x, byte y, string[] picture, ConsoleColor color = ConsoleColor.White)
@@ -99,24 +124,11 @@ namespace Snake
                             massY[xI] = ' ';
                         }
                     }
-                    
+
                 }
                 mass[yI] = new string(massY);
             }
             return mass.ToArray();
-        }
-
-        public static string[] GenerateFrameWithText(string[] text, byte leftRight = 4, byte topDown = 2, char sim = 'X', bool doubleX = true, byte thickness = 1)
-        {
-            int wordNumMax = text.Select(item => item.Length).Prepend(0).Max();
-            string[] frame = GenerateFrame((byte)(text.Length + topDown * 2), (byte)(wordNumMax + leftRight * 2), sim, doubleX, thickness);
-            for (int i = 0; i < text.Length; i++)
-            {
-                string item = text[i];
-
-            }
-
-            return frame;
         }
     }
     public class Coordinate

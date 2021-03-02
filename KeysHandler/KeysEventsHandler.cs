@@ -3,41 +3,40 @@ using System.Threading;
 
 namespace KeysHandler
 {
-    public sealed class KeysEventsHandler : IDisposable
+    public static class KeysEventsHandler
     {
-        private bool _exit = false;
+        private static bool _exit = false;
 
-        private readonly Thread _keyRead;
-        private bool _disposedValue;
+        private static readonly Thread _keyRead;
+        private static bool _disposedValue;
 
         private delegate void KeyEvents(ConsoleKey key);
-        private event KeyEvents PressedKey;
+        private static event KeyEvents PressedKey;
 
-        public event Action PressButtonW;
-        public event Action PressButtonS;
-        public event Action PressButtonA;
-        public event Action PressButtonD;
-        public event Action PressButtonQ;
+        public static event Action PressButtonW;
+        public static event Action PressButtonS;
+        public static event Action PressButtonA;
+        public static event Action PressButtonD;
+        public static event Action PressButtonQ;
 
-        public event Action PressButtonUp;
-        public event Action PressButtonDown;
-        public event Action PressButtonLeft;
-        public event Action PressButtonRight;
-        public event Action PressButtonNum0;
+        public static event Action PressButtonUp;
+        public static event Action PressButtonDown;
+        public static event Action PressButtonLeft;
+        public static event Action PressButtonRight;
+        public static event Action PressButtonNum0;
 
-        public event Action PressButtonEsc;
-        public event Action PressButtonEnter;
+        public static event Action PressButtonEsc;
+        public static event Action PressButtonEnter;
 
-        public KeysEventsHandler()
+        static KeysEventsHandler()
         {
             PressedKey += PressKey;
             _keyRead = new Thread(WaitKey);
             _keyRead.Start();
         }
 
-        private void WaitKey()
+        private static void WaitKey()
         {
-            Dispose(false);
             while (!_exit)
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
@@ -45,7 +44,7 @@ namespace KeysHandler
             }
         }
 
-        private void PressKey(ConsoleKey key)
+        private static void PressKey(ConsoleKey key)
         {
             switch (key)
             {
@@ -114,25 +113,9 @@ namespace KeysHandler
             }
         }
 
-        private void Dispose(bool disposing)
+        public static void Close()
         {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    _exit = true;
-                }
-
-                // TODO: освободить неуправляемые ресурсы (неуправляемые объекты) и переопределить метод завершения
-                // TODO: установить значение NULL для больших полей
-                _disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            _exit = true;
         }
     }
 }

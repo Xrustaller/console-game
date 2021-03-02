@@ -1,32 +1,11 @@
-﻿using KeysHandler;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Snake
 {
-    public static class GameCore
+    public static class ConsoleGraphicCore
     {
-        public static GameMenu GameMenu;
-        public static KeysEventsHandler KeysEventsHandler;
-        public static void Initialization(byte left, byte top)
-        {
-            Console.Title = "Game";
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.Clear();
-            Console.CursorVisible = false;
-            Console.SetWindowSize(left * 2 - 10, top + 1);
-            KeysEventsHandler = new KeysEventsHandler();
-            GameMenu = new GameMenu();
-            GameMenu.Initialization();
-        }
-
-        public static void Close()
-        {
-            KeysEventsHandler.Dispose();
-            GameMenu = null;
-        }
-
         public static void DrawPixel(byte x, byte y, char pixel, ConsoleColor color = ConsoleColor.White)
         {
             Console.ForegroundColor = color;
@@ -43,7 +22,7 @@ namespace Snake
         public static void DrawDoublePixel(byte x, byte y, char pixel, ConsoleColor color = ConsoleColor.White)
         {
             DrawPixel(x, y, pixel, color);
-            DrawPixel((byte) (x + 1), y, pixel, color);
+            DrawPixel((byte)(x + 1), y, pixel, color);
         }
 
         public static void DrawDoublePixel(int x, int y, char pixel, ConsoleColor color = ConsoleColor.White)
@@ -133,8 +112,19 @@ namespace Snake
     }
     public class Coordinate
     {
-        public byte Y { get; set; }
         public byte X { get; set; }
+        public byte Y { get; set; }
+
+        public Coordinate()
+        {
+
+        }
+
+        public Coordinate(byte x, byte y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 
 }

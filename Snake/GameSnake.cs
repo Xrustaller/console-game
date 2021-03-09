@@ -75,7 +75,7 @@ namespace Snake
             while (!_exit)
             {
                 Thread.Sleep(_timerTime);
-                if (Move(_snake, _snake.MoveSide))
+                if (Move(_snake))
                 {
                     _exit = true;
                     EndGameEvent?.Invoke();
@@ -88,8 +88,11 @@ namespace Snake
             ConsoleGraphicCore.DrawString((byte)(_xMax + 12), 4, $"Score: {Score}");
         }
 
-        public bool Move(Snake snake, Side moveSide)
+        public bool Move(Snake snake)
         {
+            Side moveSide = snake.MoveSide;
+            // [0][1][2][3][4][5][6][7][8]
+            // x = 1, y = 2
             //ConsoleGraphicCore.DrawString((byte)(_xMax + 12), 12, $"X: {snake.SnakePartCoordinates[0].X} Y: {snake.SnakePartCoordinates[0].Y}     ");
 
             Coordinate new0Coordinate = new Coordinate();
@@ -284,6 +287,8 @@ namespace Snake
             MoveSide = LastSide = (Side)rand.Next(0, 3);
 
             SnakePartCoordinates = new Coordinate[part];
+            // [0][1][2]
+            // x = 1, y = 2
 
             switch (LastSide)
             {

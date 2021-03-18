@@ -101,24 +101,24 @@ namespace Snake
             }
         }
 
-        private GameSnake game;
+        private IGame _game;
         private void MenuSelectStartGame()
         {
-            Console.Clear();
             KeysEventsHandler.PressButtonEsc -= MenuSelectExit;
             KeysEventsHandler.PressButtonEnter -= MenuSelect;
             KeysEventsHandler.PressButtonW -= ChangeMenuPositionUp;
             KeysEventsHandler.PressButtonS -= ChangeMenuPositionDown;
             //private const int X = 60;//private const int Y = 30;
-            game = new GameSnake(60, 30);
-            game.InitializationSinglePlayer();
-            game.EndGameEvent += WaitEndGame;
+            Console.Title = "Game: Snake - Single Player";
+            _game = new GameSnake(60, 30);
+            _game.EndGameEvent += WaitEndGame;
+            _game.InitializationSinglePlayer();
         }
 
         private void WaitEndGame()
         {
-            game.EndGameEvent -= WaitEndGame;
-            game = null;
+            _game.EndGameEvent -= WaitEndGame;
+            _game = null;
             Initialization();
         }
 

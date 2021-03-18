@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Snake
 {
-    public class GameSnake
+    public class GameSnake : IGame
     {
         private readonly byte _yMax; // Высота
         private readonly byte _xMax; // Ширина
@@ -45,8 +45,9 @@ namespace Snake
             _timer = new Thread(Timer);
         }
 
-        public void InitializationSinglePlayer(bool wall = true, bool randomWall = false)
+        public void InitializationSinglePlayer()
         {
+            Console.Clear();
             KeysEventsHandler.PressButtonW += _snake.MoveUp;
             KeysEventsHandler.PressButtonS += _snake.MoveDown;
             KeysEventsHandler.PressButtonA += _snake.MoveLeft;
@@ -57,14 +58,14 @@ namespace Snake
 
             string[] frameScore = ConsoleGraphicCore.GenerateFrame(7, 18, '█'); // █
             ConsoleGraphicCore.DrawPicture((byte)(_xMax + 8), 2, frameScore, ConsoleColor.DarkGray);
+            Score = 0;
 
             ConsoleGraphicCore.DrawDoublePixel(_xMax + 12, 6, '█', ConsoleColor.DarkRed);
             ConsoleGraphicCore.DrawString((byte)(_xMax + 15), 6, "- Apple");
 
             ConsoleGraphicCore.DrawDoublePixel(_xMax + 12, 8, '█', ConsoleColor.DarkGray);
             ConsoleGraphicCore.DrawString((byte)(_xMax + 15), 8, "- Wall");
-            
-            Score = 0;
+
             GenerateApple();
             _timer.Start();
         }
@@ -81,6 +82,7 @@ namespace Snake
                     EndGameEvent?.Invoke();
                 }
             }
+            _exit = false;
         }
 
         private void OnScoreChangeEvent()
@@ -210,29 +212,19 @@ namespace Snake
                     break;
             }
 
-            Coordinate[] result = snake.AddSnakePart == 0 ? new Coordinate[snake.SnakePartCoordinates.Length] : new Coordinate[snake.SnakePartCoordinates.Length + 1];
+            ConsoleGraphicCore.DrawDoublePixel(snake.SnakePartCoordinates[^1].X * 2, snake.SnakePartCoordinates[^1].Y, ' ');
+
+            int boolAddSnPart = snake.AddSnakePart == 0 ? 0 : 1;
+            Coordinate[] result = new Coordinate[snake.SnakePartCoordinates.Length + boolAddSnPart];
             result[0] = new0Coordinate;
-
-            if (snake.AddSnakePart == 0)
+            for (int i = 0; i < snake.SnakePartCoordinates.Length - 1 + boolAddSnPart; i++)
             {
-                for (int i = 0; i < snake.SnakePartCoordinates.Length - 1; i++)
-                {
-                    result[i + 1] = snake.SnakePartCoordinates[i];
-                }
+                result[i + 1] = snake.SnakePartCoordinates[i];
             }
-            else
-            {
-                for (int i = 0; i < snake.SnakePartCoordinates.Length; i++)
-                {
-                    result[i + 1] = snake.SnakePartCoordinates[i];
-                }
-
-                snake.AddSnakePart -= 1;
-            }
-            snake.LastCord = snake.SnakePartCoordinates[^1];
             snake.SnakePartCoordinates = result;
 
-            ConsoleGraphicCore.DrawDoublePixel(snake.LastCord.X * 2, snake.LastCord.Y, ' ');
+            snake.AddSnakePart -= boolAddSnPart;
+
             ConsoleGraphicCore.DrawCoords(snake.SnakePartCoordinates, '█', ConsoleColor.DarkGreen);
             return false;
         }
@@ -273,7 +265,6 @@ namespace Snake
     public class Snake
     {
         public Coordinate[] SnakePartCoordinates;
-        public Coordinate LastCord;
 
         public Side MoveSide;
         public Side LastSide;
@@ -298,7 +289,6 @@ namespace Snake
                     {
                         SnakePartCoordinates[i] = new Coordinate(SnakePartCoordinates[i - 1].X, (byte)(SnakePartCoordinates[i - 1].Y + 1));
                     }
-                    LastCord = new Coordinate(SnakePartCoordinates[part - 1].X, (byte)(SnakePartCoordinates[part - 1].Y + 1));
                     break;
                 case Side.Down:
                     SnakePartCoordinates[0] = new Coordinate((byte)rand.Next(1, x / 2), (byte)rand.Next(part, y - (part + 1)));
@@ -306,7 +296,6 @@ namespace Snake
                     {
                         SnakePartCoordinates[i] = new Coordinate(SnakePartCoordinates[i - 1].X, (byte)(SnakePartCoordinates[i - 1].Y - 1));
                     }
-                    LastCord = new Coordinate(SnakePartCoordinates[part - 1].X, (byte)(SnakePartCoordinates[part - 1].Y - 1));
                     break;
                 case Side.Left:
                     SnakePartCoordinates[0] = new Coordinate((byte)rand.Next(part + 1, x / 2 - part), (byte)rand.Next(1, y));
@@ -314,7 +303,6 @@ namespace Snake
                     {
                         SnakePartCoordinates[i] = new Coordinate((byte)(SnakePartCoordinates[i - 1].X + 1), SnakePartCoordinates[i - 1].Y);
                     }
-                    LastCord = new Coordinate((byte)(SnakePartCoordinates[part - 1].X + 1), SnakePartCoordinates[part - 1].Y);
                     break;
                 case Side.Right:
                     SnakePartCoordinates[0] = new Coordinate((byte)rand.Next(part, x / 2 - (part + 1)), (byte)rand.Next(1, y));
@@ -322,7 +310,6 @@ namespace Snake
                     {
                         SnakePartCoordinates[i] = new Coordinate((byte)(SnakePartCoordinates[i - 1].X - 1), SnakePartCoordinates[i - 1].Y);
                     }
-                    LastCord = new Coordinate((byte)(SnakePartCoordinates[part - 1].X - 1), SnakePartCoordinates[part - 1].Y);
                     break;
             }
         }

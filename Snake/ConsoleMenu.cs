@@ -1,10 +1,12 @@
-﻿using System;
+﻿using KeysHandler;
+using Snake.Interface;
+using Snake.Model;
+using System;
 using System.Linq;
-using KeysHandler;
 
 namespace Snake
 {
-    public class ConsoleMenu
+    public class ConsoleMenu : ConsoleGraphicCore
     {
         private const char PickMenu = '>';
         private const byte TopIndentMenu = 6;
@@ -41,13 +43,13 @@ namespace Snake
             Console.Clear();
 
             int wordNumMax = _menuMass.Select(item => item.ToString().Length).Prepend(0).Max();
-            ConsoleGraphicCore.DrawPicture(LeftIndentMenu, TopIndentMenu, ConsoleGraphicCore.GenerateFrame((byte)(2 + _menuMass.Length), (byte)(8 + wordNumMax), '█'), ConsoleColor.DarkRed);
+            DrawPicture(new Cord2D(LeftIndentMenu, TopIndentMenu), GenerateFrame((byte)(2 + _menuMass.Length), (byte)(8 + wordNumMax), '█'), ConsoleColor.DarkRed);
             for (byte index = 0; index < _menuMass.Length; index++)
             {
                 string item = _menuMass[index].ToString();
-                ConsoleGraphicCore.DrawString(LeftIndentMenu + 6, (byte)(index + TopIndentMenu + 2), item);
+                DrawString(new Cord2D(LeftIndentMenu + 6, index + TopIndentMenu + 2), item);
             }
-            ConsoleGraphicCore.DrawPixel(LeftIndentMenu + 5, TopIndentMenu + 2, PickMenu);
+            DrawPixel(new Cord2D(LeftIndentMenu + 5, TopIndentMenu + 2), PickMenu);
             _menuState = 0;
 
             KeysEventsHandler.PressButtonEsc += MenuSelectExit;
@@ -58,7 +60,7 @@ namespace Snake
 
         private void ChangeMenuPositionUp()
         {
-            ConsoleGraphicCore.DrawPixel(LeftIndentMenu + 5, (byte)_menuState + TopIndentMenu + 2, ' ');
+            DrawPixel(new Cord2D(LeftIndentMenu + 5, (int)_menuState + TopIndentMenu + 2), ' ');
             if ((sbyte)_menuState < 1)
             {
                 _menuState = (ConsoleMenuEnum)(_menuMass.Length - 1);
@@ -67,12 +69,12 @@ namespace Snake
             {
                 _menuState--;
             }
-            ConsoleGraphicCore.DrawPixel(LeftIndentMenu + 5, (byte)_menuState + TopIndentMenu + 2, PickMenu);
+            DrawPixel(new Cord2D(LeftIndentMenu + 5, (int)_menuState + TopIndentMenu + 2), PickMenu);
         }
 
         private void ChangeMenuPositionDown()
         {
-            ConsoleGraphicCore.DrawPixel(LeftIndentMenu + 5, (byte)_menuState + TopIndentMenu + 2, ' ');
+            DrawPixel(new Cord2D(LeftIndentMenu + 5, (int)_menuState + TopIndentMenu + 2), ' ');
             if ((sbyte)_menuState > _menuMass.Length - 2)
             {
                 _menuState = 0;
@@ -81,7 +83,7 @@ namespace Snake
             {
                 _menuState++;
             }
-            ConsoleGraphicCore.DrawPixel(LeftIndentMenu + 5, (byte)_menuState + TopIndentMenu + 2, PickMenu);
+            DrawPixel(new Cord2D(LeftIndentMenu + 5, (int)_menuState + TopIndentMenu + 2), PickMenu);
         }
 
         private void MenuSelect()

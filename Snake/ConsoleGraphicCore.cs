@@ -1,52 +1,46 @@
-﻿using System;
+﻿using Snake.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace Snake
 {
-    public static class ConsoleGraphicCore
+    public class ConsoleGraphicCore
     {
-        public static void DrawPixel(byte x, byte y, char pixel, ConsoleColor color = ConsoleColor.White)
+        public void DrawPixel(Cord2D cord, char pixel, ConsoleColor color = ConsoleColor.White)
         {
             Console.ForegroundColor = color;
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(cord.X, cord.Y);
             Console.Write(pixel);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void DrawPixel(int x, int y, char pixel, ConsoleColor color = ConsoleColor.White)
-        {
-            DrawPixel((byte)x, (byte)y, pixel, color);
-        }
-
-        public static void DrawDoublePixel(byte x, byte y, char pixel, ConsoleColor color = ConsoleColor.White)
-        {
-            DrawPixel(x, y, pixel, color);
-            DrawPixel((byte)(x + 1), y, pixel, color);
-        }
-
-        public static void DrawDoublePixel(int x, int y, char pixel, ConsoleColor color = ConsoleColor.White)
-        {
-            DrawDoublePixel((byte)x, (byte)y, pixel, color);
-        }
-
-        public static void DrawString(byte startX, byte startY, string text, ConsoleColor color = ConsoleColor.White)
+        public void DrawDoublePixel(Cord2D cord, char pixel, ConsoleColor color = ConsoleColor.White)
         {
             Console.ForegroundColor = color;
-            Console.SetCursorPosition(startX, startY);
+            Console.SetCursorPosition(cord.X, cord.Y);
+            Console.Write(pixel);
+            Console.SetCursorPosition(cord.X + 1, cord.Y);
+            Console.Write(pixel);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public void DrawString(Cord2D startCord, string text, ConsoleColor color = ConsoleColor.White)
+        {
+            Console.ForegroundColor = color;
+            Console.SetCursorPosition(startCord.X, startCord.Y);
             Console.Write(text);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void DrawPicture(byte x, byte y, char[][] picture, ConsoleColor color = ConsoleColor.White)
+        public void DrawPicture(Cord2D cord, char[][] picture, ConsoleColor color = ConsoleColor.White)
         {
             Console.ForegroundColor = color;
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(cord.X, cord.Y);
             for (byte index = 0; index < picture.Length; index++)
             {
                 char[] itemY = picture[index];
-                Console.SetCursorPosition(0 + x, index + y);
+                Console.SetCursorPosition(0 + cord.X, index + cord.Y);
                 foreach (char item in itemY)
                 {
                     Console.Write(item);
@@ -55,20 +49,28 @@ namespace Snake
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public static void DrawCoords(IEnumerable<Coordinate> cords, char partS, ConsoleColor color = ConsoleColor.White)
+        public void DrawPictureCords(IEnumerable<Cord2D> cords, char partS, bool doublePixel = true, ConsoleColor color = ConsoleColor.White)
         {
-            foreach (Coordinate t in cords)
+            foreach (Cord2D t in cords)
             {
-                DrawDoublePixel(t.X * 2, t.Y, partS, color);
+                if (doublePixel)
+                {
+                    DrawDoublePixel(t, partS, color);
+                    //DrawDoublePixel(t.X * 2, t.Y, partS, color);
+                }
+                else
+                {
+                    DrawPixel(t, partS, color);
+                }
             }
         }
 
-        public static void DrawPicture(byte x, byte y, string[] picture, ConsoleColor color = ConsoleColor.White)
+        public void DrawPicture(Cord2D cord, string[] picture, ConsoleColor color = ConsoleColor.White)
         {
-            DrawPicture(x, y, picture.Select(i => i.ToCharArray()).ToArray(), color);
+            DrawPicture(cord, picture.Select(i => i.ToCharArray()).ToArray(), color);
         }
 
-        public static string[] GenerateFrame(byte voidNumY, byte voidNumX, char sim = 'X', bool doubleX = true, byte thickness = 1)
+        public string[] GenerateFrame(byte voidNumY, byte voidNumX, char sim = 'X', bool doubleX = true, byte thickness = 1)
         {
             voidNumX += (byte)(thickness * 4);
             voidNumY += (byte)(thickness * 2);
@@ -111,21 +113,4 @@ namespace Snake
             return mass.ToArray();
         }
     }
-    public class Coordinate
-    {
-        public byte X { get; set; }
-        public byte Y { get; set; }
-
-        public Coordinate()
-        {
-
-        }
-
-        public Coordinate(byte x, byte y)
-        {
-            X = x;
-            Y = y;
-        }
-    }
-
 }

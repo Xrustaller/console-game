@@ -3,12 +3,11 @@ using System.Threading;
 
 namespace KeysHandler
 {
-    public static class KeysEventsHandler
+    public class KeysEventsHandler
     {
         private static bool _exit = false;
 
-        private static readonly Thread _keyRead;
-        private static bool _disposedValue;
+        private static readonly Thread KeyRead;
 
         private delegate void KeyEvents(ConsoleKey key);
         private static event KeyEvents PressedKey;
@@ -31,8 +30,8 @@ namespace KeysHandler
         static KeysEventsHandler()
         {
             PressedKey += PressKey;
-            _keyRead = new Thread(WaitKey);
-            _keyRead.Start();
+            KeyRead = new Thread(WaitKey);
+            KeyRead.Start();
         }
 
         private static void WaitKey()

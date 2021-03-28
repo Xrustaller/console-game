@@ -1,5 +1,5 @@
-﻿using System;
-using KeysHandler;
+﻿using KeysHandler;
+using System;
 
 namespace Snake
 {
@@ -7,7 +7,7 @@ namespace Snake
     {
         private const int X = 60;
         private const int Y = 30;
-        
+
         public static ConsoleMenu ConsoleMenu;
 
         private static void Main(string[] args)

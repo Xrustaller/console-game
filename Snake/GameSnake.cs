@@ -58,7 +58,7 @@ namespace Snake
             string[] frameField = GenerateFrame((byte)(_yMax - 1), (byte)(_xMax - 2), '█'); // █
             DrawPicture(new Cord2D(0, 0), frameField, ConsoleColor.DarkGray);
 
-            string[] frameScore = GenerateFrame(7, 18, '█'); // █
+            string[] frameScore = GenerateFrame(9, 18, '█'); // █
             DrawPicture(new Cord2D(_xMax + 8, 2), frameScore, ConsoleColor.DarkGray);
             Score = 0;
 
@@ -67,6 +67,8 @@ namespace Snake
 
             DrawDoublePixel(new Cord2D(_xMax + 12, 8), '█', ConsoleColor.DarkGray);
             DrawString(new Cord2D(_xMax + 15, 8), "- Wall");
+
+            DrawString(new Cord2D(_xMax + 12, 10), "WASD - Control");
 
             GenerateApple();
             _timer.Start();

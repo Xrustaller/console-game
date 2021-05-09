@@ -54,24 +54,30 @@ namespace Snake
             KeysEventsHandler.PressButtonS += _snake.MoveDown;
             KeysEventsHandler.PressButtonA += _snake.MoveLeft;
             KeysEventsHandler.PressButtonD += _snake.MoveRight;
+            KeysEventsHandler.PressButtonNum0 += AddPart;
 
-            string[] frameField = GenerateFrame((byte)(_yMax - 1), (byte)(_xMax - 2), '█'); // █
-            DrawPicture(new Cord2D(0, 0), frameField, ConsoleColor.DarkGray);
+            string[] frameField = GenerateFrame(_xMax - 1, _yMax - 1, '█'); // █
+            DrawDoublePicture(new Cord2D(0, 0), frameField, ConsoleColor.DarkGray);
 
-            string[] frameScore = GenerateFrame(9, 18, '█'); // █
-            DrawPicture(new Cord2D(_xMax + 8, 2), frameScore, ConsoleColor.DarkGray);
+            string[] frameScore = GenerateFrame(9, 9, '█'); // █
+            DrawDoublePicture(new Cord2D(_xMax + 4, 2), frameScore, ConsoleColor.DarkGray);
             Score = 0;
 
-            DrawDoublePixel(new Cord2D(_xMax + 12, 6), '█', ConsoleColor.DarkRed);
-            DrawString(new Cord2D(_xMax + 15, 6), "- Apple");
+            DrawDoublePixel(new Cord2D(_xMax + 6, 6), '█', ConsoleColor.DarkRed);
+            DrawString(new Cord2D((_xMax + 8) * 2, 6), "- Apple");
 
-            DrawDoublePixel(new Cord2D(_xMax + 12, 8), '█', ConsoleColor.DarkGray);
-            DrawString(new Cord2D(_xMax + 15, 8), "- Wall");
+            DrawDoublePixel(new Cord2D(_xMax + 6, 8), '█', ConsoleColor.DarkGray);
+            DrawString(new Cord2D((_xMax + 8) * 2, 8), "- Wall");
 
-            DrawString(new Cord2D(_xMax + 12, 10), "WASD - Control");
+            DrawString(new Cord2D((_xMax + 6) * 2, 10), "WASD - Control");
 
             GenerateApple();
             _timer.Start();
+        }
+
+        private void AddPart()
+        {
+            _snake.AddSnakePart++;
         }
 
         private void Timer()
@@ -91,23 +97,19 @@ namespace Snake
 
         private void OnScoreChangeEvent()
         {
-            DrawString(new Cord2D(_xMax + 12, 4), $"Score: {Score}");
+            DrawString(new Cord2D((_xMax + 6) * 2, 4), $"Score: {Score}");
         }
 
         public bool Move(Snake snake)
         {
             Side moveSide = snake.MoveSide;
-            // [0][1][2][3][4][5][6][7][8]
-            // x = 1, y = 2
-            //ConsoleGraphicCore.DrawString((byte)(_xMax + 12), 12, $"X: {snake.SnakePartCoordinates[0].X} Y: {snake.SnakePartCoordinates[0].Y}     ");
 
             Cord2D new0Cord2D = new Cord2D();
             snake.LastSide = moveSide;
             switch (moveSide)
             {
                 case Side.Up:
-
-                    if (snake.SnakePartCoordinates[0].Y == _apple.Y && snake.SnakePartCoordinates[0].X == _apple.X / 2)
+                    if (snake.SnakePartCoordinates[0].Y == _apple.Y && snake.SnakePartCoordinates[0].X == _apple.X)
                     {
                         GenerateApple();
                         snake.AddSnakePart++;
@@ -115,7 +117,6 @@ namespace Snake
                     }
                     else if (snake.SnakePartCoordinates[0].Y == 1)
                     {
-                        //ConsoleGraphicCore.DrawString((byte)(_xMax + 12), 14, "DIE UP     ");
                         return true;
                     }
                     else
@@ -134,7 +135,7 @@ namespace Snake
                     new0Cord2D.Y = snake.SnakePartCoordinates[0].Y - 1;
                     break;
                 case Side.Down:
-                    if (snake.SnakePartCoordinates[0].Y == _apple.Y && snake.SnakePartCoordinates[0].X == _apple.X / 2)
+                    if (snake.SnakePartCoordinates[0].Y == _apple.Y && snake.SnakePartCoordinates[0].X == _apple.X)
                     {
                         snake.AddSnakePart++;
                         Score += 100;
@@ -142,7 +143,6 @@ namespace Snake
                     }
                     else if (snake.SnakePartCoordinates[0].Y == _yMax - 1)
                     {
-                        //ConsoleGraphicCore.DrawString((byte)(_xMax + 12), 14, "DIE DOWN   ");
                         return true;
                     }
                     else
@@ -161,7 +161,7 @@ namespace Snake
                     new0Cord2D.Y = snake.SnakePartCoordinates[0].Y + 1;
                     break;
                 case Side.Left:
-                    if (snake.SnakePartCoordinates[0].X == _apple.X / 2 && snake.SnakePartCoordinates[0].Y == _apple.Y)
+                    if (snake.SnakePartCoordinates[0].X == _apple.X && snake.SnakePartCoordinates[0].Y == _apple.Y)
                     {
                         snake.AddSnakePart++;
                         Score += 100;
@@ -169,7 +169,6 @@ namespace Snake
                     }
                     else if (snake.SnakePartCoordinates[0].X == 1)
                     {
-                        //ConsoleGraphicCore.DrawString((byte)(_xMax + 12), 14, "DIE LEFT   ");
                         return true;
                     }
                     else
@@ -188,15 +187,14 @@ namespace Snake
                     new0Cord2D.Y = snake.SnakePartCoordinates[0].Y;
                     break;
                 case Side.Right:
-                    if (snake.SnakePartCoordinates[0].X == _apple.X / 2 && snake.SnakePartCoordinates[0].Y == _apple.Y)
+                    if (snake.SnakePartCoordinates[0].X == _apple.X && snake.SnakePartCoordinates[0].Y == _apple.Y)
                     {
                         snake.AddSnakePart++;
                         Score += 100;
                         GenerateApple();
                     }
-                    else if (snake.SnakePartCoordinates[0].X == _xMax / 2 - 1)
+                    else if (snake.SnakePartCoordinates[0].X == _xMax - 1)
                     {
-                        //ConsoleGraphicCore.DrawString((byte)(_xMax + 12), 14, "DIE RIGHT  ");
                         return true;
                     }
                     else
@@ -216,7 +214,7 @@ namespace Snake
                     break;
             }
 
-            DrawDoublePixel(new Cord2D(snake.SnakePartCoordinates[^1].X * 2, snake.SnakePartCoordinates[^1].Y), ' ');
+            DrawDoublePixel(snake.SnakePartCoordinates[^1], ' ');
 
             int boolAddSnPart = snake.AddSnakePart == 0 ? 0 : 1;
             Cord2D[] result = new Cord2D[snake.SnakePartCoordinates.Length + boolAddSnPart];
@@ -233,7 +231,7 @@ namespace Snake
             for (int index = 0; index < snake.SnakePartCoordinates.Length; index++)
             {
                 Cord2D item = snake.SnakePartCoordinates[index];
-                cord2D[index] = new Cord2D(item.X * 2, item.Y);
+                cord2D[index] = new Cord2D(item.X, item.Y);
             }
 
             DrawPictureCords(cord2D, '█', true, ConsoleColor.DarkGreen);
@@ -244,20 +242,19 @@ namespace Snake
         {
             bool Check()
             {
-                return _snake.SnakePartCoordinates.Any(item => item.X == _apple.X / 2 && item.Y == _apple.Y);
+                return _snake.SnakePartCoordinates.Any(item => item.X == _apple.X && item.Y == _apple.Y);
             }
 
-            _apple.X = _rand.Next(1, _xMax / 2) * 2;
+            _apple.X = _rand.Next(1, _xMax);
             _apple.Y = _rand.Next(1, _yMax);
 
             while (Check())
             {
-                _apple.X = _rand.Next(1, _xMax / 2) * 2;
+                _apple.X = _rand.Next(1, _xMax);
                 _apple.Y = _rand.Next(1, _yMax);
             }
 
             DrawDoublePixel(new Cord2D(_apple.X, _apple.Y), '█', ConsoleColor.DarkRed);
-            //ConsoleGraphicCore.DrawString((byte)(_xMax + 12), 16, $"X: {_apple.X / 2} Y: {_apple.Y}     ");
         }
 
         private void Exit()
@@ -266,8 +263,6 @@ namespace Snake
             KeysEventsHandler.PressButtonS -= _snake.MoveDown;
             KeysEventsHandler.PressButtonA -= _snake.MoveLeft;
             KeysEventsHandler.PressButtonD -= _snake.MoveRight;
-
-            //ConsoleGraphicCore.DrawString((byte)(_xMax + 12), 16, $"X: {_apple.X / 2} Y: {_apple.Y}     ");
 
             _snake = null;
         }
@@ -295,21 +290,21 @@ namespace Snake
             switch (LastSide)
             {
                 case Side.Up:
-                    SnakePartCoordinates[0] = new Cord2D(rand.Next(1, x / 2), rand.Next(part + 1, y - part));
+                    SnakePartCoordinates[0] = new Cord2D(rand.Next(1, x), rand.Next(part + 1, y - part));
                     for (byte i = 1; i < SnakePartCoordinates.Length; i++)
                     {
                         SnakePartCoordinates[i] = new Cord2D(SnakePartCoordinates[i - 1].X, SnakePartCoordinates[i - 1].Y + 1);
                     }
                     break;
                 case Side.Down:
-                    SnakePartCoordinates[0] = new Cord2D(rand.Next(1, x / 2), rand.Next(part, y - (part + 1)));
+                    SnakePartCoordinates[0] = new Cord2D(rand.Next(1, x), rand.Next(part, y - (part + 1)));
                     for (byte i = 1; i < SnakePartCoordinates.Length; i++)
                     {
                         SnakePartCoordinates[i] = new Cord2D(SnakePartCoordinates[i - 1].X, SnakePartCoordinates[i - 1].Y - 1);
                     }
                     break;
                 case Side.Left:
-                    SnakePartCoordinates[0] = new Cord2D(rand.Next(part + 1, x / 2 - part), rand.Next(1, y));
+                    SnakePartCoordinates[0] = new Cord2D(rand.Next(part + 1, x - part), rand.Next(1, y));
                     for (byte i = 1; i < SnakePartCoordinates.Length; i++)
                     {
                         SnakePartCoordinates[i] = new Cord2D(SnakePartCoordinates[i - 1].X + 1, SnakePartCoordinates[i - 1].Y);

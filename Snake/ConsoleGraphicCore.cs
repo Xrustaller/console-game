@@ -12,17 +12,15 @@ namespace Snake
             Console.ForegroundColor = color;
             Console.SetCursorPosition(cord.X, cord.Y);
             Console.Write(pixel);
-            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public void DrawDoublePixel(Cord2D cord, char pixel, ConsoleColor color = ConsoleColor.White)
         {
             Console.ForegroundColor = color;
-            Console.SetCursorPosition(cord.X, cord.Y);
+            Console.SetCursorPosition(cord.X * 2, cord.Y);
             Console.Write(pixel);
-            Console.SetCursorPosition(cord.X + 1, cord.Y);
+            Console.SetCursorPosition(cord.X * 2 + 1, cord.Y);
             Console.Write(pixel);
-            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public void DrawString(Cord2D startCord, string text, ConsoleColor color = ConsoleColor.White)
@@ -30,7 +28,6 @@ namespace Snake
             Console.ForegroundColor = color;
             Console.SetCursorPosition(startCord.X, startCord.Y);
             Console.Write(text);
-            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public void DrawPicture(Cord2D cord, char[][] picture, ConsoleColor color = ConsoleColor.White)
@@ -46,7 +43,26 @@ namespace Snake
                     Console.Write(item);
                 }
             }
-            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public void DrawDoublePicture(Cord2D cord, char[][] picture, ConsoleColor color = ConsoleColor.White)
+        {
+            Console.ForegroundColor = color;
+            Console.SetCursorPosition(cord.X * 2, cord.Y);
+            for (byte index = 0; index < picture.Length; index++)
+            {
+                char[] itemY = picture[index];
+                for (int i = 0; i < itemY.Length; i++)
+                {
+                    char item = itemY[i];
+                    DrawDoublePixel(new Cord2D(i + cord.X, index + cord.Y), item, color);
+                }
+            }
+        }
+
+        public void DrawDoublePicture(Cord2D cord, string[] picture, ConsoleColor color = ConsoleColor.White)
+        {
+            DrawDoublePicture(cord, picture.Select(i => i.ToCharArray()).ToArray(), color);
         }
 
         public void DrawPictureCords(IEnumerable<Cord2D> cords, char partS, bool doublePixel = true, ConsoleColor color = ConsoleColor.White)
@@ -70,10 +86,10 @@ namespace Snake
             DrawPicture(cord, picture.Select(i => i.ToCharArray()).ToArray(), color);
         }
 
-        public string[] GenerateFrame(byte voidNumY, byte voidNumX, char sim = 'X', bool doubleX = true, byte thickness = 1)
+        public string[] GenerateFrame(int voidNumX, int voidNumY, char sim = 'X', int thickness = 1)
         {
-            voidNumX += (byte)(thickness * 4);
-            voidNumY += (byte)(thickness * 2);
+            voidNumX += thickness * 2;
+            voidNumY += thickness * 2;
             if (voidNumY == 0)
             {
                 voidNumY = 1;
@@ -84,29 +100,14 @@ namespace Snake
                 char[] massY = new char[voidNumX];
                 for (int xI = 0; xI < voidNumX; xI++)
                 {
-                    if (doubleX)
+                    if (xI <= thickness - 1 || yI <= thickness - 1 || xI >= voidNumX - 1 || yI == voidNumY - 1)
                     {
-                        if (xI <= thickness || yI <= thickness - 1 || xI >= voidNumX - 2 || yI == voidNumY - 1)
-                        {
-                            massY[xI] = sim;
-                        }
-                        else
-                        {
-                            massY[xI] = ' ';
-                        }
+                        massY[xI] = sim;
                     }
                     else
                     {
-                        if (xI <= thickness - 1 || yI <= thickness - 1 || xI >= voidNumX - 1 || yI == voidNumY - 1)
-                        {
-                            massY[xI] = sim;
-                        }
-                        else
-                        {
-                            massY[xI] = ' ';
-                        }
+                        massY[xI] = ' ';
                     }
-
                 }
                 mass[yI] = new string(massY);
             }

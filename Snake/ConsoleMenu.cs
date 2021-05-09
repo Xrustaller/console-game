@@ -10,14 +10,14 @@ namespace Snake
     {
         private const char PickMenu = '>';
         private const byte TopIndentMenu = 6;
-        private const byte LeftIndentMenu = 12;
+        private const byte LeftIndentMenu = 6;
 
         private enum ConsoleMenuEnum
         {
             StartSnake,
-            //One,
-            //Two,
-            //Three,
+            One,
+            Two,
+            Three,
             Exit
         }
 
@@ -26,9 +26,9 @@ namespace Snake
         private readonly ConsoleMenuEnum[] _menuMass =
         {
             ConsoleMenuEnum.StartSnake,
-            //ConsoleMenuEnum.One,
-            //ConsoleMenuEnum.Two,
-            //ConsoleMenuEnum.Three,
+            ConsoleMenuEnum.One,
+            ConsoleMenuEnum.Two,
+            ConsoleMenuEnum.Three,
             ConsoleMenuEnum.Exit
         };
 
@@ -43,13 +43,16 @@ namespace Snake
             Console.Clear();
 
             int wordNumMax = _menuMass.Select(item => item.ToString().Length).Prepend(0).Max();
-            DrawPicture(new Cord2D(LeftIndentMenu, TopIndentMenu), GenerateFrame((byte)(2 + _menuMass.Length), (byte)(8 + wordNumMax), '█'), ConsoleColor.DarkRed);
+
+            string[] frame = GenerateFrame(wordNumMax, 2 + _menuMass.Length, '█');
+            DrawDoublePicture(new Cord2D(LeftIndentMenu, TopIndentMenu), frame, ConsoleColor.DarkRed);
+
             for (byte index = 0; index < _menuMass.Length; index++)
             {
                 string item = _menuMass[index].ToString();
-                DrawString(new Cord2D(LeftIndentMenu + 6, index + TopIndentMenu + 2), item);
+                DrawString(new Cord2D(LeftIndentMenu * 2 + 6, index + TopIndentMenu + 2), item);
             }
-            DrawPixel(new Cord2D(LeftIndentMenu + 5, TopIndentMenu + 2), PickMenu);
+            DrawPixel(new Cord2D(LeftIndentMenu * 2 + 5, TopIndentMenu + 2), PickMenu);
             _menuState = 0;
 
             KeysEventsHandler.PressButtonEsc += MenuSelectExit;
@@ -60,7 +63,7 @@ namespace Snake
 
         private void ChangeMenuPositionUp()
         {
-            DrawPixel(new Cord2D(LeftIndentMenu + 5, (int)_menuState + TopIndentMenu + 2), ' ');
+            DrawPixel(new Cord2D(LeftIndentMenu * 2 + 5, (int)_menuState + TopIndentMenu + 2), ' ');
             if ((sbyte)_menuState < 1)
             {
                 _menuState = (ConsoleMenuEnum)(_menuMass.Length - 1);
@@ -69,12 +72,12 @@ namespace Snake
             {
                 _menuState--;
             }
-            DrawPixel(new Cord2D(LeftIndentMenu + 5, (int)_menuState + TopIndentMenu + 2), PickMenu);
+            DrawPixel(new Cord2D(LeftIndentMenu * 2 + 5, (int)_menuState + TopIndentMenu + 2), PickMenu);
         }
 
         private void ChangeMenuPositionDown()
         {
-            DrawPixel(new Cord2D(LeftIndentMenu + 5, (int)_menuState + TopIndentMenu + 2), ' ');
+            DrawPixel(new Cord2D(LeftIndentMenu * 2 + 5, (int)_menuState + TopIndentMenu + 2), ' ');
             if ((sbyte)_menuState > _menuMass.Length - 2)
             {
                 _menuState = 0;
@@ -83,7 +86,7 @@ namespace Snake
             {
                 _menuState++;
             }
-            DrawPixel(new Cord2D(LeftIndentMenu + 5, (int)_menuState + TopIndentMenu + 2), PickMenu);
+            DrawPixel(new Cord2D(LeftIndentMenu * 2 + 5, (int)_menuState + TopIndentMenu + 2), PickMenu);
         }
 
         private void MenuSelect()
@@ -112,7 +115,7 @@ namespace Snake
             KeysEventsHandler.PressButtonS -= ChangeMenuPositionDown;
             //private const int X = 60;//private const int Y = 30;
             Console.Title = "Game: Snake - Single Player";
-            _game = new GameSnake(60, 30);
+            _game = new GameSnake(30, 30);
             _game.EndGameEvent += WaitEndGame;
             _game.InitializationSinglePlayer();
         }
